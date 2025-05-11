@@ -1,1 +1,5 @@
-Mostrar datos de una semana/dia con la cantidad de mensajes(por franja horaria o por hora), con la idea de poder buscar o incluso comparar 2 fechas distintas o una sola, mostrar un grafico de flujo de mensajes, asi poder comprara entre horas de x semana o incluso comprara 2 semanas/días distintos, por ejemplo mostrar como varia el flujo entre una semana normal y una en la que hay un examen
+Mostrar datos de una semana/dia con la cantidad de mensajes(por franja horaria o por hora),
+ con la idea de poder buscar o incluso comparar 2 fechas distintas o una sola,
+ mostrar un grafico de flujo de mensajes, asi poder comprara entre horas de x semana 
+o incluso comprara 2 semanas/días distintos, por ejemplo mostrar como varia el flujo entre
+ una semana normal y una en la que hay un examen
