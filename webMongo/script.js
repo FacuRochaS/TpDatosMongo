@@ -1,58 +1,83 @@
-const franjas = Array.from({ length: 12 }, (_, i) =>
-    `${(i * 2).toString().padStart(2, '0')}:00–${(i * 2 + 1).toString().padStart(2, '0')}:59`
-);
-
 let chart;
 
-async function consultarAPI() {
-    const fecha = document.getElementById("fecha").value;
-    if (!fecha) return alert("Seleccioná una fecha");
-
+async function consultarAPI(fecha) {
     const res = await fetch(`https://localhost:7130/api/Consultas/consulta1?fechaInicio=${fecha}`);
-    const data = await res.json();
+    return await res.json();
+}
 
-    const fechas = [...new Set(data.map(d => d.fecha))].sort();
+async function consultaComparativa() {
+    const fecha1 = document.getElementById("fecha1").value;
+    const fecha2 = document.getElementById("fecha2").value;
 
-    const seriesPorFranja = franjas.map((_, franjaIdx) => {
-        return fechas.map(fecha => {
-            const item = data.find(x => x.fecha === fecha && x.franja === franjaIdx);
-            return {
-                time: fecha,
-                value: item ? item.cantidad : 0
-            };
+    if (!fecha1 && !fecha2) {
+        alert("Seleccioná al menos una fecha.");
+        return;
+    }
+
+    const fechas = [];
+    const datos = [];
+
+    if (fecha1) {
+        fechas.push(fecha1);
+        datos.push(await consultarAPI(fecha1));
+    }
+
+    if (fecha2) {
+        fechas.push(fecha2);
+        datos.push(await consultarAPI(fecha2));
+    }
+
+    const labels = Array.from({ length: 24 }, (_, h) => `${h.toString().padStart(2, "0")}:00`);
+    const datasets = [];
+
+    datos.forEach((data, index) => {
+        const valores = new Array(24).fill(0);
+        data.forEach(d => {
+            valores[d.hora] = d.cantidad;
+        });
+
+        const colores = [
+            ["rgba(59, 130, 246, 1)", "rgba(59, 130, 246, 0.2)"], // azul
+            ["rgba(234, 88, 12, 1)", "rgba(234, 88, 12, 0.2)"]    // naranja
+        ];
+
+        datasets.push({
+            label: `Fecha ${fechas[index]}`,
+            data: valores,
+            borderColor: colores[index][0],
+            backgroundColor: colores[index][1],
+            tension: 0.3,
+            fill: true
         });
     });
 
-    // Limpiar gráfico anterior
-    document.getElementById('chart').innerHTML = '';
-    chart = LightweightCharts.createChart(document.getElementById('chart'), {
-        layout: {
-            background: { color: '#111827' },
-            textColor: '#ffffff'
+    const ctx = document.getElementById("consulta1").getContext("2d");
+    if (chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels,
+            datasets
         },
-        width: document.getElementById('chart').clientWidth,
-        height: 400,
-        timeScale: {
-            timeVisible: true,
-            borderColor: '#333'
-        },
-        grid: {
-            vertLines: { color: '#2d3748' },
-            horzLines: { color: '#2d3748' }
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    ticks: { color: "white" },
+                    grid: { color: "#2d3748" }
+                },
+                y: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 30, // podés ajustarlo o hacerlo dinámico
+                    ticks: { color: "white" },
+                    grid: { color: "#2d3748" }
+                }
+            },
+            plugins: {
+                legend: { labels: { color: "white" } }
+            }
         }
-    });
-
-    const colores = [
-        '#60a5fa', '#3b82f6', '#1d4ed8', '#9333ea', '#e11d48', '#f97316',
-        '#84cc16', '#14b8a6', '#06b6d4', '#0ea5e9', '#4ade80', '#c084fc'
-    ];
-
-    seriesPorFranja.forEach((serie, idx) => {
-        const s = chart.addLineSeries({
-            color: colores[idx % colores.length],
-            lineWidth: 2,
-            title: franjas[idx]
-        });
-        s.setData(serie);
     });
 }
