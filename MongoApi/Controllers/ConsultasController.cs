@@ -34,10 +34,15 @@ namespace MongoApi.Controllers
         }
 
         [HttpGet("consulta1")]
-        public string GetConsulta1() { 
+        public async Task<IActionResult> GetConsulta1([FromQuery] string fechaInicio)
+        {
+            if (!DateTime.TryParse(fechaInicio, out var inicio))
+                return BadRequest("Formato de fecha inválido");
 
-            return "value1";
+            var resultado = await _servicio.Consulta1(inicio);
+            return Ok(resultado);
         }
+
 
         [HttpGet("consulta2")]
         public string GetConsulta2()

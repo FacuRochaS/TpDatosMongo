@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Hnp05kwbaeU=",
+  "dgSpecHash": "k7XGjJjKolA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\facur\\OneDrive\\Escritorio\\MongoApi\\MongoApi.csproj",
+  "projectFilePath": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\MongoApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\facur\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\facur\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.11\\microsoft.aspnetcore.openapi.8.0.11.nupkg.sha512",

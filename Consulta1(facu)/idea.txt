@@ -1,1 +1,69 @@
 Mostrar datos de una semana/dia con la cantidad de mensajes(por franja horaria o por hora), con la idea de poder buscar o incluso comparar 2 fechas distintas o una sola, mostrar un grafico de flujo de mensajes, asi poder comprara entre horas de x semana o incluso comprara 2 semanas/días distintos, por ejemplo mostrar como varia el flujo entre una semana normal y una en la que hay un examen
+
+
+
+Flujo de mensajes por semana: consultar la cantidad de mensajes de una semana determinada, agrupados por días y horas. La idea sería mostrar en un gráfico cómo varía la actividad según el día y la hora. Incluso podríamos comparar una semana "normal" con otra en la que hubo un parcial.
+
+Horarios de actividad: ver cuáles son los horarios con más mensajes durante la semana y los fines de semana, para identificar en qué momentos el grupo está más activo.
+
+Datos de autores: obtener información sobre los usuarios que más mensajes enviaron, su promedio de caracteres por mensaje, promedio de mensajes por día, etc.
+
+Datos generales del chat: calcular el tiempo promedio de respuesta, cantidad de mensajes por día, actividad en vacaciones o fines de semana, y cantidad de miembros activos (por ejemplo, los que enviaron más de X mensajes en el último mes).
+
+
+
+
+
+
+
+
+
+
+
+
+db.grupoWpp.aggregate([
+  {
+    $addFields: {
+      datetime: {
+        $dateFromString: {
+          dateString: {
+            $concat: ["$fecha", "T", "$hora"]
+          },
+          timezone: "America/Argentina/Cordoba"
+        }
+      }
+    }
+  },
+  {
+    $match: {
+      datetime: {
+        $gte: ISODate("2024-03-11T00:00:00.000Z"), // Lunes de la semana deseada
+        $lt: ISODate("2024-03-18T00:00:00.000Z")   // Lunes de la siguiente semana
+      }
+    }
+  },
+  {
+    $project: {
+      dia: { $dayOfWeek: "$datetime" }, // 1 (domingo) a 7 (sábado)
+      hora: { $hour: "$datetime" }
+    }
+  },
+  {
+    $project: {
+      dia: 1,
+      franja: { $floor: { $divide: ["$hora", 2] } } // Agrupar de a 2 horas
+    }
+  },
+  {
+    $group: {
+      _id: { dia: "$dia", franja: "$franja" },
+      cantidad: { $sum: 1 }
+    }
+  },
+  {
+    $sort: {
+      "_id.dia": 1,
+      "_id.franja": 1
+    }
+  }
+])

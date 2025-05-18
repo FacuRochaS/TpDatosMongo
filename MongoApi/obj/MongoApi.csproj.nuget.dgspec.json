@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\facur\\OneDrive\\Escritorio\\MongoApi\\MongoApi.csproj": {}
+    "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\MongoApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\facur\\OneDrive\\Escritorio\\MongoApi\\MongoApi.csproj": {
+    "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\MongoApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\facur\\OneDrive\\Escritorio\\MongoApi\\MongoApi.csproj",
+        "projectUniqueName": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\MongoApi.csproj",
         "projectName": "MongoApi",
-        "projectPath": "C:\\Users\\facur\\OneDrive\\Escritorio\\MongoApi\\MongoApi.csproj",
+        "projectPath": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\MongoApi.csproj",
         "packagesPath": "C:\\Users\\facur\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\facur\\OneDrive\\Escritorio\\MongoApi\\obj\\",
+        "outputPath": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
