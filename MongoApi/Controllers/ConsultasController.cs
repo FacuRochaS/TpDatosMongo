@@ -44,10 +44,18 @@ namespace MongoApi.Controllers
         }
 
 
-        [HttpGet("consulta2")]
-        public string GetConsulta2()
+        [HttpGet("consulta2")] ////FEDE
+        public IActionResult GetConsulta2([FromQuery] string fechaInicio)
         {
-            return "value1";
+            try
+            {
+                var datos =  _servicio.Consulta2(fechaInicio);
+                return Ok(datos);
+
+            }
+            catch (Exception e) {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet("consulta3")]

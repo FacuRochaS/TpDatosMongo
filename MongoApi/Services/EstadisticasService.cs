@@ -1,6 +1,8 @@
 ﻿using MongoApi.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
 
 namespace MongoApi.Services
 {
@@ -84,10 +86,35 @@ namespace MongoApi.Services
             return lista;
         }
 
+        public List<PalabraFrecuenteDTO> Consulta2(string fecha) /////FEDE
+        {
+            /*
+            db.chat.aggregate([
+            { $match: { fechaDelMensaje: "2025-05-19" } }, // Aquí se pasa el día como parámetro desde la API
+            { $project: { palabras: { $split: ["$contenido", " "] } } },
+            { $unwind: "$palabras" },
+            { $group: { _id: "$palabras", count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $limit: 10 } // Obtener las 10 palabras más frecuentes
+            ]);
+             */
+            var pipeline = new[]
+            {
+            new BsonDocument { { "$match", new BsonDocument { { "fechaDelMensaje", fecha } } } },
+            new BsonDocument { { "$project", new BsonDocument { { "palabras", new BsonDocument { { "$split", new BsonArray { "$contenido", " " } } } } } } },
+            new BsonDocument { { "$unwind", "$palabras" } },
+            new BsonDocument { { "$group", new BsonDocument { { "_id", "$palabras" }, { "count", new BsonDocument { { "$sum", 1 } } } } } },
+            new BsonDocument { { "$sort", new BsonDocument { { "count", -1 } } } },
+            new BsonDocument { { "$limit", 10 } }
+            };
 
+            var resultado = _mensajes.Aggregate<BsonDocument>(pipeline).ToList();
 
-
-
-
+            return resultado.Select(doc => new PalabraFrecuenteDTO
+            {
+                Palabra = doc["_id"].AsString,
+                Frecuencia = doc["count"].ToInt32()
+            }).ToList();
+        }
     }
 }
