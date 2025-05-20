@@ -59,9 +59,17 @@ namespace MongoApi.Controllers
         }
 
         [HttpGet("consulta3")]
-        public string GetConsulta3()
+        public async Task<IActionResult> GetConsulta3()
         {
-            return "value1";
+            try
+            {
+                var resultado = await _servicio.Consulta3();
+                return Ok(resultado);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
 

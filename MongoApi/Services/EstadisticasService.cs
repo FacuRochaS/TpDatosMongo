@@ -121,6 +121,63 @@ namespace MongoApi.Services
         //----------------------Nacho----------------------------------------------------------------------
 
         //--------------------Tincho, martin, furlan, nuca supe como queres que te digan xddd jaja----------
+        public async Task<List<AutorEstadisticasDTO>> Consulta3()
+        {
+            var pipeline = new BsonDocument[]
+            {
+                // Proyectar los campos necesarios y calcular la longitud de cada mensaje
+                new BsonDocument("$project", new BsonDocument
+                {
+                    { "autor", 1 },
+                    { "longitudMensaje", new BsonDocument("$strLenCP", "$contenido") }
+                }),
+
+                // Agrupar por autor y calcular estadísticas
+                new BsonDocument("$group", new BsonDocument
+                {
+                    { "_id", "$autor" },
+                    { "totalMensajes", new BsonDocument("$sum", 1) },
+                    { "totalCaracteres", new BsonDocument("$sum", "$longitudMensaje") }
+                }),
+
+                // Calcular el promedio de caracteres por mensaje
+                new BsonDocument("$addFields", new BsonDocument
+                {
+                    { "promedioCaracteresPorMensaje", new BsonDocument("$divide", new BsonArray
+                        {
+                            "$totalCaracteres",
+                            "$totalMensajes"
+                        })
+                    }
+                }),
+
+                // Ordenar por total de mensajes de mayor a menor
+                new BsonDocument("$sort", new BsonDocument("totalMensajes", -1)),
+
+                // Limitar a los 10 primeros resultados
+                new BsonDocument("$limit", 10),
+
+                // Proyectar el resultado final con nombres de campos más amigables
+                new BsonDocument("$project", new BsonDocument
+                {
+                    { "_id", 0 },
+                    { "autor", "$_id" },
+                    { "totalMensajes", 1 },
+                    { "totalCaracteres", 1 },
+                    { "promedioCaracteresPorMensaje", 1 }
+                })
+            };
+
+            var results = await _mensajes.Aggregate<BsonDocument>(pipeline).ToListAsync();
+
+            return results.Select(doc => new AutorEstadisticasDTO
+            {
+                Autor = doc["autor"].AsString,
+                TotalMensajes = doc["totalMensajes"].AsInt32,
+                TotalCaracteres = doc["totalCaracteres"].AsInt32,
+                PromedioCaracteresPorMensaje = Math.Round(doc["promedioCaracteresPorMensaje"].AsDouble, 2)
+            }).ToList();
+        }
 
         //----------------------------Santi----------------------------------------------------------------
 
