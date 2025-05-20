@@ -106,5 +106,35 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "MongoApi.Controllers.ConsultasController",
+    "Method": "GetEstadisticasGenerales",
+    "RelativePath": "api/Consultas/EstadisticasGenerales",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MongoApi.Controllers.ConsultasController",
+    "Method": "GetMensajesHora",
+    "RelativePath": "api/Consultas/MensajesHora",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MongoApi.Controllers.ConsultasController",
+    "Method": "GetMensajesPorAutor",
+    "RelativePath": "api/Consultas/MensajesPorAutor",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   }
 ]

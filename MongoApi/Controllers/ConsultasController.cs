@@ -79,5 +79,31 @@ namespace MongoApi.Controllers
 
 
 
+        //----------------------------------Otras consultas--------------------------------
+        [HttpGet("MensajesHora")]
+        public async Task<IActionResult> GetMensajesHora()
+        {
+            
+
+            var resultado = await _servicio.MensajesHora();
+            return Ok(resultado);
+        }
+
+        [HttpGet("MensajesPorAutor")]
+        public async Task<IActionResult> GetMensajesPorAutor()
+        {
+            var resultado = await _servicio.MensajesPorAutor();
+            return Ok(resultado);
+        }
+
+        [HttpGet("EstadisticasGenerales")]
+        public async Task<IActionResult> GetEstadisticasGenerales()
+        {
+            var resultado = await _servicio.ObtenerEstadisticasGenerales();
+            return Ok(resultado);
+        }
+
+
+
     }
 }

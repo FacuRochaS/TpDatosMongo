@@ -14,7 +14,8 @@ namespace MongoApi.Services
         {
             var client = new MongoClient(config["MongoDB:ConnectionString"]); // Link coneccion
             var database = client.GetDatabase(config["MongoDB:DatabaseName"]); //Nombre BD
-            _mensajes = database.GetCollection<Mensaje>("grupoWpp"); //Este es el nombre de la coleccion
+            _mensajes = database.GetCollection<Mensaje>("fashionWorld");
+           // _mensajes = database.GetCollection<Mensaje>("grupoWpp"); //Este es el nombre de la coleccion
         }
 
         public async Task<List<Mensaje>> ConsultaLibre(string filtroJson)
@@ -116,5 +117,165 @@ namespace MongoApi.Services
                 Frecuencia = doc["count"].ToInt32()
             }).ToList();
         }
+
+        //----------------------Nacho----------------------------------------------------------------------
+
+        //--------------------Tincho, martin, furlan, nuca supe como queres que te digan xddd jaja----------
+
+        //----------------------------Santi----------------------------------------------------------------
+
+
+
+        //-------------------------------Extrasss-------------------------------------------------
+        public async Task<List<MensajesPorHoraDTO>> MensajesHora()
+        {
+            var pipeline = new BsonDocument[]
+            {
+        new BsonDocument("$addFields", new BsonDocument("datetime",
+            new BsonDocument("$dateFromString", new BsonDocument
+            {
+                { "dateString", new BsonDocument("$concat", new BsonArray { "$fecha", "T", "$hora" }) }
+            })
+        )),
+
+        new BsonDocument("$project", new BsonDocument {
+            { "hora", new BsonDocument("$hour", "$datetime") }
+        }),
+
+        new BsonDocument("$group", new BsonDocument {
+            { "_id", "$hora" },
+            { "cantidad", new BsonDocument("$sum", 1) }
+        }),
+
+        new BsonDocument("$sort", new BsonDocument {
+            { "_id", 1 }
+        })
+            };
+
+            var results = await _mensajes.Aggregate<BsonDocument>(pipeline).ToListAsync();
+
+            var horasCompletas = Enumerable.Range(0, 24).ToDictionary(h => h, h => 0);
+
+            foreach (var doc in results)
+            {
+                int hora = doc["_id"].ToInt32();
+                int cantidad = doc["cantidad"].ToInt32();
+                horasCompletas[hora] = cantidad;
+            }
+
+            var lista = horasCompletas.Select(kvp => new MensajesPorHoraDTO
+            {
+                Hora = kvp.Key,
+                HoraTexto = ObtenerHoraTexto(kvp.Key),
+                Cantidad = kvp.Value
+            }).OrderBy(x => x.Hora).ToList();
+
+            return lista;
+        }
+
+        public async Task<List<MensajesPorAutorDTO>> MensajesPorAutor()
+        {
+            var pipeline = new BsonDocument[]
+            {
+        new BsonDocument("$group", new BsonDocument
+        {
+            { "_id", "$autor" },
+            { "cantidad", new BsonDocument("$sum", 1) }
+        }),
+        new BsonDocument("$sort", new BsonDocument("cantidad", -1))
+            };
+
+            var resultados = await _mensajes.Aggregate<BsonDocument>(pipeline).ToListAsync();
+
+            return resultados.Select(doc => new MensajesPorAutorDTO
+            {
+                Autor = doc["_id"].AsString,
+                Cantidad = doc["cantidad"].ToInt32()
+            }).ToList();
+        }
+
+        public async Task<EstadisticasGeneralesDTO> ObtenerEstadisticasGenerales()
+        {
+            // Contar todos los mensajes
+            var totalMensajes = await _mensajes.CountDocumentsAsync(FilterDefinition<Mensaje>.Empty);
+
+            // Obtener autores únicos
+            var totalUsuarios = await _mensajes
+                .Distinct<string>("autor", FilterDefinition<Mensaje>.Empty)
+                .ToListAsync();
+
+            // Pipeline para obtener fecha de primer y último mensaje
+            var pipeline = new BsonDocument[]
+            {
+        new BsonDocument("$addFields", new BsonDocument("datetime",
+            new BsonDocument("$dateFromString", new BsonDocument
+            {
+                { "dateString", new BsonDocument("$concat", new BsonArray { "$fecha", "T", "$hora" }) }
+            })
+        )),
+        new BsonDocument("$sort", new BsonDocument("datetime", 1)),
+        new BsonDocument("$group", new BsonDocument
+        {
+            { "_id", BsonNull.Value },
+            { "fechaInicio", new BsonDocument("$first", "$datetime") },
+            { "fechaFin", new BsonDocument("$last", "$datetime") }
+        })
+            };
+
+            var fechasDoc = await _mensajes.Aggregate<BsonDocument>(pipeline).FirstOrDefaultAsync();
+
+            // Manejar el caso en que no haya fechas (colección vacía)
+            DateTime fechaInicio, fechaFin;
+            int dias;
+
+            if (fechasDoc != null)
+            {
+                fechaInicio = fechasDoc["fechaInicio"].ToUniversalTime().Date;
+                fechaFin = fechasDoc["fechaFin"].ToUniversalTime().Date;
+                dias = (fechaFin - fechaInicio).Days + 1;
+            }
+            else
+            {
+                fechaInicio = DateTime.MinValue;
+                fechaFin = DateTime.MinValue;
+                dias = 0;
+            }
+
+            return new EstadisticasGeneralesDTO
+            {
+                TotalMensajes = (int)totalMensajes,
+                TotalUsuarios = totalUsuarios.Count,
+                DiasConActividad = dias,
+                PromedioPorDia = dias > 0 ? Math.Round(totalMensajes / (double)dias, 1) : 0,
+                FechaInicio = fechaInicio,
+                FechaFin = fechaFin
+            };
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

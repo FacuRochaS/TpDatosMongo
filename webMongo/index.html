@@ -9,20 +9,39 @@
     <!-- Chart.js (versión estándar, no módulo) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-gray-900 text-white flex flex-col items-center py-10 min-h-screen">
+<body class="bg-gray-900 text-white min-h-screen">
+<!-- Header (lo dejás igual) -->
+<header class="bg-gray-800 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">Mi Sitio</h1>
+        <nav class="space-x-6">
+            <a href="index.html" class="hover:text-blue-400">Principal</a>
+            <a href="chat.html" class="hover:text-blue-400">Chat</a>
+            <a href="graficos.html" class="hover:text-blue-400">Gráficos</a>
+        </nav>
+    </div>
+</header>
 
-<h1 class="text-3xl font-bold mb-6">Consulta 1</h1>
+<!-- Contenido principal centrado -->
+<main class="flex flex-col items-center px-4 py-10">
 
-<div class="mb-6 flex gap-4">
-    <input type="date" id="fecha1" class="bg-gray-800 text-white px-4 py-2 rounded" />
-    <input type="date" id="fecha2" class="bg-gray-800 text-white px-4 py-2 rounded" />
-    <button onclick="consultaComparativa()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Comparar</button>
-</div>
+    <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h1 class="text-3xl font-bold mb-4 text-center"></h1>
 
+        <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-4">
+            <input type="date" id="fecha1" class="bg-gray-700 text-white px-4 py-2 rounded w-full sm:w-auto" />
+            <input type="date" id="fecha2" class="bg-gray-700 text-white px-4 py-2 rounded w-full sm:w-auto" />
+            <button onclick="consultaComparativa()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded w-full sm:w-auto">
+                Comparar
+            </button>
+        </div>
 
-<div class="w-full max-w-4xl">
-    <canvas id="consulta1"></canvas>
-</div>
+        <div class="w-full">
+            <canvas id="consulta1"></canvas>
+        </div>
+    </div>
+
+</main>
 
 <script src="script.js"></script>
 </body>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+
+<!-- Header común -->
+<header class="bg-gray-800 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">Mi Sitio</h1>
+        <nav class="space-x-6">
+            <a href="index.html" class="hover:text-blue-400">Principal</a>
+            <a href="chat.html" class="hover:text-blue-400">Chat</a>
+            <a href="graficos.html" class="hover:text-blue-400">Gráficos</a>
+        </nav>
+    </div>
+</header>
+
+<!-- Contenido de chat -->
+<main class="flex flex-col items-center px-4 py-10">
+    <h2 class="text-3xl font-semibold mb-4">Estadísticas generales</h2>
+
+
+    <!-- Estadísticas generales -->
+    <div class="w-full max-w-4xl grid grid-cols-2 md:grid-cols-3 gap-4 text-center mb-12">
+        <div class="bg-gray-800 p-6 rounded shadow">
+            <div id="statTotal" class="text-3xl font-bold">-</div>
+            <div class="text-gray-400">Mensajes</div>
+        </div>
+        <div class="bg-gray-800 p-6 rounded shadow">
+            <div id="statUsuarios" class="text-3xl font-bold">-</div>
+            <div class="text-gray-400">Usuarios</div>
+        </div>
+        <div class="bg-gray-800 p-6 rounded shadow">
+            <div id="statDias" class="text-3xl font-bold">-</div>
+            <div class="text-gray-400">Días con actividad</div>
+        </div>
+        <div class="bg-gray-800 p-6 rounded shadow col-span-2 md:col-span-1">
+            <div id="statPromedio" class="text-3xl font-bold">-</div>
+            <div class="text-gray-400">Promedio x día</div>
+        </div>
+        <div class="bg-gray-800 p-6 rounded shadow col-span-2">
+            <div id="statRango" class="text-xl font-semibold">-</div>
+            <div class="text-gray-400">Desde / Hasta</div>
+        </div>
+    </div>
+
+</main>
+<script src="scirpt-estadis.js"></script>
+
+</body>
+</html>

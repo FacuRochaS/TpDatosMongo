@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gráficos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+
+<!-- Header común -->
+<header class="bg-gray-800 text-white shadow-md">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold">Mi Sitio</h1>
+    <nav class="space-x-6">
+      <a href="index.html" class="hover:text-blue-400">Principal</a>
+      <a href="chat.html" class="hover:text-blue-400">Chat</a>
+      <a href="graficos.html" class="hover:text-blue-400">Gráficos</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Contenido gráfico -->
+<!-- Contenido gráfico -->
+<main class="flex flex-col items-center px-4 py-10 gap-12">
+
+  <!-- Gráfico comparativo -->
+  <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-semibold mb-2 text-center">Comparativa de mensajes por hora</h2>
+    <p class="text-center text-gray-400 mb-6">Seleccioná una o dos fechas para comparar la cantidad de mensajes enviados por hora en cada una.</p>
+
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-4">
+      <input type="date" id="fecha1" class="bg-gray-700 text-white px-4 py-2 rounded w-full sm:w-auto" />
+      <input type="date" id="fecha2" class="bg-gray-700 text-white px-4 py-2 rounded w-full sm:w-auto" />
+      <button onclick="consultaComparativa()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded w-full sm:w-auto">
+        Comparar
+      </button>
+    </div>
+
+    <div class="w-full">
+      <canvas id="consulta1"></canvas>
+    </div>
+  </div>
+
+  <!-- Gráfico histórico -->
+  <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-semibold mb-2 text-center">Mensajes por hora (histórico)</h2>
+    <p class="text-center text-gray-400 mb-6">Este gráfico muestra la distribución total de mensajes agrupados por hora, considerando todos los días.</p>
+
+    <div class="w-full">
+      <canvas id="consultaHistorica"></canvas>
+    </div>
+  </div>
+
+  <!-- Gráfico por autor -->
+  <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-semibold mb-2 text-center">Distribución de mensajes por autor</h2>
+    <p class="text-center text-gray-400 mb-6">Este gráfico muestra el porcentaje de mensajes enviados por cada autor registrado en la base de datos.</p>
+
+    <div class="w-full">
+      <canvas id="consultaAutores"></canvas>
+    </div>
+  </div>
+
+
+</main>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
