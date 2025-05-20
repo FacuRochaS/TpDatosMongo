@@ -74,9 +74,20 @@ namespace MongoApi.Controllers
 
 
         [HttpGet("consulta4")]
-        public string GetConsulta4()
+        public async Task<IActionResult> GetConsulta4()
         {
-            return "value1";
+            try
+            {
+
+                var datos = await _servicio.Consulta4();
+                return Ok(datos);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest("Error al obtener horarios de actividad: " + ex.Message);
+            }
+
         }
 
         [HttpGet("consulta5")]

@@ -6,47 +6,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- TailwindCSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js (versión estándar, no módulo) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
-<!-- Header (lo dejás igual) -->
+<!-- Header -->
 <header class="bg-gray-800 text-white shadow-md">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <h1 class="text-xl font-bold">Mi Sitio</h1>
+        <h1 class="text-xl font-bold">Grupo 10</h1>
         <nav class="space-x-6">
             <a href="index.html" class="hover:text-blue-400">Principal</a>
             <a href="chat.html" class="hover:text-blue-400">Chat</a>
-            <a href="graficos.html" class="hover:text-blue-400">Gráficos</a>
+            <a href="graficos.html" class="hover:text-blue-400">Mensajes</a>
             <a href="autores.html" class="hover:text-blue-400">Autores</a>
         </nav>
     </div>
 </header>
 
-<!-- Contenido principal centrado -->
-<main class="flex flex-col items-center px-4 py-10">
+<main class="flex flex-col items-center px-4 py-10 space-y-10 max-w-4xl mx-auto">
+    <!-- Introducción -->
+    <section class="bg-gray-800 p-6 rounded-lg shadow-lg w-full">
+        <h2 class="text-3xl font-bold mb-4 text-center text-blue-400">Trabajo Práctico Grupal – Bases de Datos II</h2>
+        <p class="mb-2"><span class="font-semibold">Profesora:</span> Ing. Mariana Pérez</p>
+        <p class="mb-2"><span class="font-semibold">Integrantes:</span></p>
+        <ul class="list-disc list-inside ml-4 text-gray-300 mb-4">
+            <li>Ignacio Grudine - 412399</li>
+            <li>Facundo Rocha Seret - 412108</li>
+            <li>Fenoglio Santino - 412330 </li>
+            <li>Furlan Manero Martin - 412676 </li>
+            <li>Integrante 5</li>
+        </ul>
+        <p>
+            El objetivo de este trabajo es aplicar los conocimientos adquiridos en Bases de Datos II, utilizando una
+            base de datos no relacional para analizar conversaciones extraídas de grupos de WhatsApp. Los datos se obtuvieron
+            exportando los chats a archivos `.txt` y luego fueron convertidos a formato `.json` mediante un script en Python.
+        </p>
+        <p class="mt-2">
+            La información es almacenada en una base MongoDB, a la cual se accede a través de una API desarrollada en
+            C# (.NET). Desde el sitio web, se consumen los endpoints para generar visualizaciones interactivas con gráficos y estadísticas.
+        </p>
+    </section>
 
-    <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h1 class="text-3xl font-bold mb-4 text-center"></h1>
-
-        <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-4">
-            <input type="date" id="fecha1" class="bg-gray-700 text-white px-4 py-2 rounded w-full sm:w-auto" />
-            <input type="date" id="fecha2" class="bg-gray-700 text-white px-4 py-2 rounded w-full sm:w-auto" />
-            <button onclick="consultaComparativa()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded w-full sm:w-auto">
-                Comparar
-            </button>
-        </div>
-
-        <div class="w-full">
-            <canvas id="consulta1"></canvas>
-        </div>
-    </div>
-
+    <!-- Secciones -->
+    <section class="grid md:grid-cols-3 gap-6 w-full">
+        <a href="chat.html" class="bg-blue-600 hover:bg-blue-700 p-6 rounded-lg shadow text-center">
+            <h3 class="text-xl font-bold mb-2">📊 Chat</h3>
+            <p class="text-gray-200">Estadísticas generales del grupo de WhatsApp.</p>
+        </a>
+        <a href="graficos.html" class="bg-green-600 hover:bg-green-700 p-6 rounded-lg shadow text-center">
+            <h3 class="text-xl font-bold mb-2">💬 Mensajes</h3>
+            <p class="text-gray-200">Análisis por hora, día y frecuencia de mensajes.</p>
+        </a>
+        <a href="autores.html" class="bg-purple-600 hover:bg-purple-700 p-6 rounded-lg shadow text-center">
+            <h3 class="text-xl font-bold mb-2">👤 Autores</h3>
+            <p class="text-gray-200">Ranking y estadísticas individuales por persona.</p>
+        </a>
+    </section>
 </main>
-
-<script src="script.js"></script>
 </body>
 </html>
+
 
 
 

@@ -11,21 +11,29 @@
 <!-- Header común -->
 <header class="bg-gray-800 text-white shadow-md">
   <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-    <h1 class="text-xl font-bold">Mi Sitio</h1>
+    <h1 class="text-xl font-bold">Grupo 10</h1>
     <nav class="space-x-6">
       <a href="index.html" class="hover:text-blue-400">Principal</a>
       <a href="chat.html" class="hover:text-blue-400">Chat</a>
-      <a href="graficos.html" class="hover:text-blue-400">Gráficos</a>
+      <a href="graficos.html" class="hover:text-blue-400">Mensajes</a>
       <a href="autores.html" class="hover:text-blue-400">Autores</a>
     </nav>
   </div>
 </header>
 
-<main class="flex flex-col items-center px-4 py-10">
+<main class="flex flex-col items-center px-4 py-10 gap-12">
   <h1 class="text-3xl font-bold mb-8">Análisis de Autores</h1>
+  <!-- Gráfico por autor -->
+  <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-semibold mb-2 text-center">Distribución de mensajes por autor</h2>
+    <p class="text-center text-gray-400 mb-6">Este gráfico muestra los autores que enviaron mas de 100 mensajes.</p>
 
+    <div class="w-full">
+      <canvas id="consultaAutores"></canvas>
+    </div>
+  </div>
   <!-- Top 10 Autores -->
-  <div class="w-full max-w-5xl mb-12 bg-gray-800 p-6 rounded-lg shadow-lg">
+  <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg">
     <h2 class="text-2xl font-semibold mb-4 text-center">Top 10 Autores con más participación</h2>
     <p class="text-center text-gray-400 mb-6">Este análisis muestra los 10 usuarios que más participan en el grupo, junto con estadísticas sobre sus mensajes.</p>
 

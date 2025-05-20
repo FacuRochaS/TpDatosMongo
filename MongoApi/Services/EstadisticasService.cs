@@ -14,8 +14,8 @@ namespace MongoApi.Services
         {
             var client = new MongoClient(config["MongoDB:ConnectionString"]); // Link coneccion
             var database = client.GetDatabase(config["MongoDB:DatabaseName"]); //Nombre BD
-            _mensajes = database.GetCollection<Mensaje>("fashionWorld");
-           // _mensajes = database.GetCollection<Mensaje>("grupoWpp"); //Este es el nombre de la coleccion
+            //_mensajes = database.GetCollection<Mensaje>("fashionWorld");
+            _mensajes = database.GetCollection<Mensaje>("grupoWpp"); //Este es el nombre de la coleccion
         }
 
         public async Task<List<Mensaje>> ConsultaLibre(string filtroJson)
@@ -67,7 +67,7 @@ namespace MongoApi.Services
 
             var results = await _mensajes.Aggregate<BsonDocument>(pipeline).ToListAsync();
 
-            // Rellenar con 0s para las horas que no existan
+            
             var horasCompletas = Enumerable.Range(0, 24).ToDictionary(h => h, h => 0);
 
             foreach (var doc in results)
@@ -120,52 +120,105 @@ namespace MongoApi.Services
 
         //----------------------Nacho----------------------------------------------------------------------
 
+        public async Task<List<HorarioActividadDto>> Consulta4()
+        {
+            var pipeline = new BsonDocument[]
+            {
+  new BsonDocument("$addFields", new BsonDocument("datetime",
+      new BsonDocument("$dateFromString", new BsonDocument
+      {
+          { "dateString", new BsonDocument("$concat", new BsonArray { "$fecha", "T", "$hora", ":00" }) }
+      })
+  )),
+
+  new BsonDocument("$project", new BsonDocument
+  {
+      { "hora", new BsonDocument("$hour", "$datetime") },
+      { "esFinde", new BsonDocument("$in", new BsonArray {
+          new BsonDocument("$dayOfWeek", "$datetime"), new BsonArray { 1, 7 }
+      })}
+  }),
+
+  new BsonDocument("$group", new BsonDocument
+  {
+      { "_id", new BsonDocument {
+          { "hora", "$hora" },
+          { "esFinde", "$esFinde" }
+      }},
+      { "cantidad", new BsonDocument("$sum", 1) }
+  })
+            };
+
+            var resultado = await _mensajes.Aggregate<BsonDocument>(pipeline).ToListAsync();
+
+            var datos = Enumerable.Range(0, 24).Select(h => new HorarioActividadDto
+            {
+                Hora = h,
+                HoraTexto = ObtenerHoraTexto(h),
+                CantidadSemana = 0,
+                CantidadFinde = 0
+            }).ToDictionary(x => x.Hora);
+
+            foreach (var doc in resultado)
+            {
+                var hora = doc["_id"]["hora"].ToInt32();
+                var esFinde = doc["_id"]["esFinde"].ToBoolean();
+                var cantidad = doc["cantidad"].ToInt32();
+
+                if (datos.TryGetValue(hora, out var dto))
+                {
+                    if (esFinde)
+                        dto.CantidadFinde += cantidad;
+                    else
+                        dto.CantidadSemana += cantidad;
+                }
+            }
+
+            return datos.Values.OrderBy(x => x.Hora).ToList();
+        }
+
         //--------------------Tincho, martin, furlan, nuca supe como queres que te digan xddd jaja----------
         public async Task<List<AutorEstadisticasDTO>> Consulta3()
         {
             var pipeline = new BsonDocument[]
             {
-                // Proyectar los campos necesarios y calcular la longitud de cada mensaje
-                new BsonDocument("$project", new BsonDocument
+        
+        new BsonDocument("$project", new BsonDocument
+        {
+            { "autor", 1 },
+            { "longitudMensaje", new BsonDocument("$strLenCP",
+                new BsonDocument("$ifNull", new BsonArray { "$mensaje", "" })) }
+        }),
+
+        new BsonDocument("$group", new BsonDocument
+        {
+            { "_id", "$autor" },
+            { "totalMensajes", new BsonDocument("$sum", 1) },
+            { "totalCaracteres", new BsonDocument("$sum", "$longitudMensaje") }
+        }),
+
+        new BsonDocument("$addFields", new BsonDocument
+        {
+            { "promedioCaracteresPorMensaje", new BsonDocument("$cond", new BsonDocument
                 {
-                    { "autor", 1 },
-                    { "longitudMensaje", new BsonDocument("$strLenCP", "$contenido") }
-                }),
-
-                // Agrupar por autor y calcular estadísticas
-                new BsonDocument("$group", new BsonDocument
-                {
-                    { "_id", "$autor" },
-                    { "totalMensajes", new BsonDocument("$sum", 1) },
-                    { "totalCaracteres", new BsonDocument("$sum", "$longitudMensaje") }
-                }),
-
-                // Calcular el promedio de caracteres por mensaje
-                new BsonDocument("$addFields", new BsonDocument
-                {
-                    { "promedioCaracteresPorMensaje", new BsonDocument("$divide", new BsonArray
-                        {
-                            "$totalCaracteres",
-                            "$totalMensajes"
-                        })
-                    }
-                }),
-
-                // Ordenar por total de mensajes de mayor a menor
-                new BsonDocument("$sort", new BsonDocument("totalMensajes", -1)),
-
-                // Limitar a los 10 primeros resultados
-                new BsonDocument("$limit", 10),
-
-                // Proyectar el resultado final con nombres de campos más amigables
-                new BsonDocument("$project", new BsonDocument
-                {
-                    { "_id", 0 },
-                    { "autor", "$_id" },
-                    { "totalMensajes", 1 },
-                    { "totalCaracteres", 1 },
-                    { "promedioCaracteresPorMensaje", 1 }
+                    { "if", new BsonDocument("$gt", new BsonArray { "$totalMensajes", 0 }) },
+                    { "then", new BsonDocument("$divide", new BsonArray { "$totalCaracteres", "$totalMensajes" }) },
+                    { "else", 0 }
                 })
+            }
+        }),
+
+        new BsonDocument("$sort", new BsonDocument("totalMensajes", -1)),
+        new BsonDocument("$limit", 10),
+
+        new BsonDocument("$project", new BsonDocument
+        {
+            { "_id", 0 },
+            { "autor", "$_id" },
+            { "totalMensajes", 1 },
+            { "totalCaracteres", 1 },
+            { "promedioCaracteresPorMensaje", 1 }
+        })
             };
 
             var results = await _mensajes.Aggregate<BsonDocument>(pipeline).ToListAsync();
@@ -173,11 +226,13 @@ namespace MongoApi.Services
             return results.Select(doc => new AutorEstadisticasDTO
             {
                 Autor = doc["autor"].AsString,
-                TotalMensajes = doc["totalMensajes"].AsInt32,
-                TotalCaracteres = doc["totalCaracteres"].AsInt32,
-                PromedioCaracteresPorMensaje = Math.Round(doc["promedioCaracteresPorMensaje"].AsDouble, 2)
+                TotalMensajes = doc["totalMensajes"].ToInt32(),
+                TotalCaracteres = doc["totalCaracteres"].ToInt32(),
+                PromedioCaracteresPorMensaje = Math.Round(doc["promedioCaracteresPorMensaje"].ToDouble(), 2)
             }).ToList();
         }
+
+
 
         //----------------------------Santi----------------------------------------------------------------
 
@@ -239,6 +294,7 @@ namespace MongoApi.Services
             { "_id", "$autor" },
             { "cantidad", new BsonDocument("$sum", 1) }
         }),
+        new BsonDocument("$match", new BsonDocument("cantidad", new BsonDocument("$gt", 100))),
         new BsonDocument("$sort", new BsonDocument("cantidad", -1))
             };
 
@@ -251,17 +307,18 @@ namespace MongoApi.Services
             }).ToList();
         }
 
+
         public async Task<EstadisticasGeneralesDTO> ObtenerEstadisticasGenerales()
         {
-            // Contar todos los mensajes
+            
             var totalMensajes = await _mensajes.CountDocumentsAsync(FilterDefinition<Mensaje>.Empty);
 
-            // Obtener autores únicos
+            
             var totalUsuarios = await _mensajes
                 .Distinct<string>("autor", FilterDefinition<Mensaje>.Empty)
                 .ToListAsync();
 
-            // Pipeline para obtener fecha de primer y último mensaje
+            
             var pipeline = new BsonDocument[]
             {
         new BsonDocument("$addFields", new BsonDocument("datetime",
@@ -281,7 +338,7 @@ namespace MongoApi.Services
 
             var fechasDoc = await _mensajes.Aggregate<BsonDocument>(pipeline).FirstOrDefaultAsync();
 
-            // Manejar el caso en que no haya fechas (colección vacía)
+            
             DateTime fechaInicio, fechaFin;
             int dias;
 

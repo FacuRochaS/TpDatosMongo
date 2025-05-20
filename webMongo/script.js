@@ -125,45 +125,12 @@ async function consultaHistorica() {
     });
 }
 
-async function consultaAutores() {
-    const res = await fetch("https://localhost:7130/api/Consultas/MensajesPorAutor");
-    const data = await res.json();
 
-    const labels = data.map(d => d.autor);
-    const valores = data.map(d => d.cantidad);
-
-    const ctx = document.getElementById("consultaAutores").getContext("2d");
-
-    new Chart(ctx, {
-        type: "pie",
-        data: {
-            labels,
-            datasets: [{
-                label: "Mensajes por autor",
-                data: valores,
-                backgroundColor: [
-                    "#60a5fa", "#34d399", "#facc15", "#f87171",
-                    "#a78bfa", "#f472b6", "#38bdf8", "#10b981"
-                ],
-                borderColor: "#1f2937",
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    labels: { color: "white" }
-                }
-            }
-        }
-    });
-}
 
 
 // Llamar al cargar
 window.addEventListener("DOMContentLoaded", () => {
     consultaHistorica();
-    consultaAutores();
+
 });
 
