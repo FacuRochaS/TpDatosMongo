@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
 <!-- Header común -->
@@ -15,7 +18,7 @@
     <nav class="space-x-6">
       <a href="index.html" class="hover:text-blue-400">Principal</a>
       <a href="chat.html" class="hover:text-blue-400">Chat</a>
-      <a href="graficos.html" class="hover:text-blue-400">Mensajes</a>
+      <a href="mensajes.html" class="hover:text-blue-400">Mensajes</a>
       <a href="autores.html" class="hover:text-blue-400">Autores</a>
     </nav>
   </div>
@@ -67,8 +70,29 @@
       </table>
     </div>
   </div>
-</main>
 
+
+  <!-- Nube de Palabras -->
+  <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-semibold mb-4 text-center">🔤 Palabras más frecuentes por autor</h2>
+    <p class="text-center text-gray-400 mb-6">Ingresá el nombre de un autor para ver su nube de palabras (sin contar multimedia).</p>
+
+    <div class="flex flex-col items-center gap-4 w-full max-w-sm mx-auto">
+      <div class="flex w-full gap-2">
+        <input type="text" id="autorInput" class="bg-gray-700 text-white px-4 py-2 rounded w-full" placeholder="Nombre del autor..." />
+        <button id="autorBuscar" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Buscar</button>
+      </div>
+    </div>
+
+    <div class="mt-6 flex justify-center">
+      <canvas id="wordCloudCanvas" width="850" height="600" class="bg-gray-900 rounded shadow"></canvas>
+
+    </div>
+  </div>
+
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
 <script src="autores.js"></script>
 </body>
 </html>

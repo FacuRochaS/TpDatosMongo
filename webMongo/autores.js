@@ -209,11 +209,68 @@ function llenarTabla(datos) {
         tablaBody.appendChild(fila);
     });
 }
+async function cargarWordCloudPorAutor(autor) {
+    try {
+        const canvas = document.getElementById("wordCloudCanvas");
+        if (!canvas) {
+            console.error("Canvas no encontrado.");
+            return;
+        }
+
+        const res = await fetch(`https://localhost:7130/api/Consultas/consulta2?autor=${encodeURIComponent(autor)}`);
+        if (!res.ok) throw new Error("No se pudo obtener los datos");
+
+        const data = await res.json();
+
+        if (!data.length) {
+            alert("No se encontraron palabras para este autor.");
+            WordCloud(canvas, { list: [] }); // limpia si no hay
+            return;
+        }
+
+        const palabras = data.map(item => [item.palabra, item.frecuencia]);
+
+        WordCloud(canvas, {
+            list: palabras,
+            gridSize: 10,
+            weightFactor: function (size) {
+                const minSize = 10;
+                const maxSize = 60;
+                return minSize + (Math.log(size + 1) / Math.log(100)) * (maxSize - minSize);
+            },
+            fontFamily: 'Impact',
+            color: 'random-light',
+            backgroundColor: "#1f2937",
+            rotateRatio: 0.5,
+        });
+
+    } catch (error) {
+        console.error("Error al cargar word cloud:", error);
+    }
+}
+
+
+document.getElementById("autorBuscar").addEventListener("click", async () => {
+    const input = document.getElementById("autorInput").value.trim();
+    if (!input) return alert("Ingresá un nombre de autor.");
+    await cargarWordCloudPorAutor(input);
+});
+
+document.getElementById("autorInput").addEventListener("keydown", async e => {
+    if (e.key === "Enter") {
+        document.getElementById("autorBuscar").click();
+    }
+});
+
 
 
 
 
 window.addEventListener("DOMContentLoaded", () => {
+
     consultaAutores();
     cargarTopAutores();
 });
+
+
+

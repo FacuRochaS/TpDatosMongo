@@ -1,6 +1,16 @@
 [
   {
     "ContainingType": "MongoApi.Controllers.ConsultasController",
+    "Method": "GetActividadEspecial",
+    "RelativePath": "api/Consultas/actividad-especial",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MongoApi.Controllers.ConsultasController",
     "Method": "ConsultaLibre",
     "RelativePath": "api/Consultas/consulta",
     "HttpMethod": "GET",
@@ -33,14 +43,14 @@
   },
   {
     "ContainingType": "MongoApi.Controllers.ConsultasController",
-    "Method": "GetConsulta2",
+    "Method": "GetPalabrasPorAutor",
     "RelativePath": "api/Consultas/consulta2",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "fechaInicio",
+        "Name": "autor",
         "Type": "System.String",
         "IsRequired": false
       }
@@ -69,26 +79,6 @@
   },
   {
     "ContainingType": "MongoApi.Controllers.ConsultasController",
-    "Method": "GetConsulta5",
-    "RelativePath": "api/Consultas/consulta5",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.String",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MongoApi.Controllers.ConsultasController",
     "Method": "GetEstadisticasGenerales",
     "RelativePath": "api/Consultas/EstadisticasGenerales",
     "HttpMethod": "GET",
@@ -111,6 +101,32 @@
     "ContainingType": "MongoApi.Controllers.ConsultasController",
     "Method": "GetMensajesPorAutor",
     "RelativePath": "api/Consultas/MensajesPorAutor",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MongoApi.Controllers.ConsultasController",
+    "Method": "GetMiembrosActivos",
+    "RelativePath": "api/Consultas/miembros-activos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "minimo",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MongoApi.Controllers.ConsultasController",
+    "Method": "GetPromedioRespuesta",
+    "RelativePath": "api/Consultas/promedio-respuesta",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

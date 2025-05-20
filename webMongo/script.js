@@ -126,11 +126,64 @@ async function consultaHistorica() {
 }
 
 
+async function consultaSemanaFinde() {
+    const res = await fetch("https://localhost:7130/api/Consultas/consulta4");
+    const data = await res.json();
+
+    const labels = data.map(d => d.horaTexto);
+    const valoresSemana = data.map(d => d.cantidadSemana);
+    const valoresFinde = data.map(d => d.cantidadFinde);
+
+    const ctx = document.getElementById("actividadSemanaFinde").getContext("2d");
+
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: "Días de semana",
+                    data: valoresSemana,
+                    backgroundColor: "rgba(59,130,246,0.6)", // azul
+                    borderColor: "rgba(59,130,246,1)",
+                    borderWidth: 1
+                },
+                {
+                    label: "Fines de semana",
+                    data: valoresFinde,
+                    backgroundColor: "rgba(234,88,12,0.6)", // naranja
+                    borderColor: "rgba(234,88,12,1)",
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    ticks: { color: "white" },
+                    grid: { color: "#2d3748" }
+                },
+                y: {
+                    beginAtZero: true,
+                    min: 0,
+                    ticks: { color: "white" },
+                    grid: { color: "#2d3748" }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: { color: "white" }
+                }
+            }
+        }
+    });
+}
 
 
 // Llamar al cargar
 window.addEventListener("DOMContentLoaded", () => {
     consultaHistorica();
-
+    consultaSemanaFinde(); // 👈 nuevo
 });
 

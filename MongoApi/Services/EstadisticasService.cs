@@ -86,28 +86,41 @@ namespace MongoApi.Services
 
             return lista;
         }
-
-        public List<PalabraFrecuenteDTO> Consulta2(string fecha) /////FEDE
+        //-------------Fede------------------------------------
+        public List<PalabraFrecuenteDTO> Consulta2(string autor)
         {
-            /*
-            db.chat.aggregate([
-            { $match: { fechaDelMensaje: "2025-05-19" } }, // Aquí se pasa el día como parámetro desde la API
-            { $project: { palabras: { $split: ["$contenido", " "] } } },
-            { $unwind: "$palabras" },
-            { $group: { _id: "$palabras", count: { $sum: 1 } } },
-            { $sort: { count: -1 } },
-            { $limit: 10 } // Obtener las 10 palabras más frecuentes
-            ]);
-             */
             var pipeline = new[]
             {
-            new BsonDocument { { "$match", new BsonDocument { { "fechaDelMensaje", fecha } } } },
-            new BsonDocument { { "$project", new BsonDocument { { "palabras", new BsonDocument { { "$split", new BsonArray { "$contenido", " " } } } } } } },
-            new BsonDocument { { "$unwind", "$palabras" } },
-            new BsonDocument { { "$group", new BsonDocument { { "_id", "$palabras" }, { "count", new BsonDocument { { "$sum", 1 } } } } } },
-            new BsonDocument { { "$sort", new BsonDocument { { "count", -1 } } } },
-            new BsonDocument { { "$limit", 10 } }
-            };
+        new BsonDocument("$match", new BsonDocument {
+            { "autor", autor },
+            { "mensaje", new BsonDocument("$ne", "<Multimedia omitido>") }
+        }),
+        new BsonDocument("$project", new BsonDocument
+        {
+            { "mensajeLimpio", new BsonDocument("$replaceAll", new BsonDocument
+                {
+                    { "input", "$mensaje" },
+                    { "find", "<Multimedia omitido>" },
+                    { "replacement", "" }
+                })
+            }
+        }),
+        new BsonDocument("$project", new BsonDocument {
+            { "palabras", new BsonDocument("$split", new BsonArray { "$mensajeLimpio", " " }) }
+        }),
+        new BsonDocument("$unwind", "$palabras"),
+        new BsonDocument("$match", new BsonDocument {
+            { "palabras", new BsonDocument("$nin", new BsonArray {
+                "", "de", "y", "a", "en", "se", "la", "lo", "q", "A", "el", "que", "con", "por", "es", "un", "una", "no", "me", "te", "ya", "jajaja" })
+            }
+        }),
+        new BsonDocument("$group", new BsonDocument {
+            { "_id", "$palabras" },
+            { "count", new BsonDocument("$sum", 1) }
+        }),
+        new BsonDocument("$sort", new BsonDocument { { "count", -1 } }),
+        new BsonDocument("$limit", 60)
+    };
 
             var resultado = _mensajes.Aggregate<BsonDocument>(pipeline).ToList();
 
@@ -117,6 +130,8 @@ namespace MongoApi.Services
                 Frecuencia = doc["count"].ToInt32()
             }).ToList();
         }
+
+
 
         //----------------------Nacho----------------------------------------------------------------------
 
@@ -235,6 +250,65 @@ namespace MongoApi.Services
 
 
         //----------------------------Santi----------------------------------------------------------------
+
+        public async Task<double> TiempoPromedioDeRespuesta()
+        {
+            var mensajes = await _mensajes.Find(_ => true)
+                                          .SortBy(m => m.Fecha) 
+                                          .ToListAsync();
+
+            var diferencias = new List<double>();
+            for (int i = 1; i < mensajes.Count; i++)
+            {
+                var fecha1 = DateTime.Parse($"{mensajes[i - 1].Fecha} {mensajes[i - 1].Hora}");
+                var fecha2 = DateTime.Parse($"{mensajes[i].Fecha} {mensajes[i].Hora}");
+
+                var diff = (fecha2 - fecha1).TotalSeconds;
+                diferencias.Add(diff);
+            }
+
+            return diferencias.Count > 0 ? Math.Round(diferencias.Average(), 2) : 0;
+        }
+
+        public async Task<(int vacaciones, int finesDeSemana)> ActividadEnVacacionesYFindes()
+        {
+            var mensajes = await _mensajes.Find(_ => true).ToListAsync();
+
+            int vacaciones = 0;
+            int findes = 0;
+
+            foreach (var m in mensajes)
+            {
+                var dt = DateTime.Parse($"{m.Fecha} {m.Hora}");
+                if (dt.Month == 1 || dt.Month == 7) vacaciones++;
+                if (dt.DayOfWeek == DayOfWeek.Saturday || dt.DayOfWeek == DayOfWeek.Sunday) findes++;
+            }
+
+            return (vacaciones, findes);
+        }
+
+        public async Task<List<(string Autor, int Cantidad)>> MiembrosActivos(int minimo = 5)
+        {
+            var desde = DateTime.Now.AddMonths(-1);
+
+            var todosLosMensajes = await _mensajes.Find(_ => true).ToListAsync();
+
+            var mensajes = todosLosMensajes
+                .Where(m =>
+                {
+                    var dt = DateTime.Parse($"{m.Fecha} {m.Hora}");
+                    return dt >= desde;
+                })
+                .ToList();
+
+
+            return mensajes
+                .GroupBy(m => m.Autor)
+                .Where(g => g.Count() > minimo)
+                .Select(g => (g.Key, g.Count()))
+                .OrderByDescending(g => g.Item2)
+                .ToList();
+        }
 
 
 

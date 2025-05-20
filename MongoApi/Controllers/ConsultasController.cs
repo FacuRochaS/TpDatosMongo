@@ -44,16 +44,17 @@ namespace MongoApi.Controllers
         }
 
 
-        [HttpGet("consulta2")] ////FEDE
-        public IActionResult GetConsulta2([FromQuery] string fechaInicio)
+        [HttpGet("consulta2")]
+        public IActionResult GetPalabrasPorAutor([FromQuery] string autor)
         {
             try
             {
-                var datos =  _servicio.Consulta2(fechaInicio);
+                var datos = _servicio.Consulta2(autor);
                 return Ok(datos);
 
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 return BadRequest(e.Message);
             }
         }
@@ -90,11 +91,27 @@ namespace MongoApi.Controllers
 
         }
 
-        [HttpGet("consulta5")]
-        public string GetConsulta5()
+        [HttpGet("promedio-respuesta")]
+        public async Task<IActionResult> GetPromedioRespuesta()
         {
-            return "value1";
+            var promedio = await _servicio.TiempoPromedioDeRespuesta();
+            return Ok(new { promedioSegundos = promedio });
         }
+
+        [HttpGet("actividad-especial")]
+        public async Task<IActionResult> GetActividadEspecial()
+        {
+            var (vacaciones, findes) = await _servicio.ActividadEnVacacionesYFindes();
+            return Ok(new { mensajesVacaciones = vacaciones, mensajesFinde = findes });
+        }
+
+        [HttpGet("miembros-activos")]
+        public async Task<IActionResult> GetMiembrosActivos([FromQuery] int minimo = 5)
+        {
+            var miembros = await _servicio.MiembrosActivos(minimo);
+            return Ok(miembros.Select(m => new { autor = m.Autor, cantidad = m.Cantidad }));
+        }
+
 
 
 

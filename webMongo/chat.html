@@ -15,7 +15,7 @@
             <nav class="space-x-6">
                 <a href="index.html" class="hover:text-blue-400">Principal</a>
                 <a href="chat.html" class="hover:text-blue-400">Chat</a>
-                <a href="graficos.html" class="hover:text-blue-400">Mensajes</a>
+                <a href="mensajes.html" class="hover:text-blue-400">Mensajes</a>
                 <a href="autores.html" class="hover:text-blue-400">Autores</a>
             </nav>
         </nav>
@@ -43,13 +43,44 @@
         </div>
         <div class="bg-gray-800 p-6 rounded shadow col-span-2 md:col-span-1">
             <div id="statPromedio" class="text-3xl font-bold">-</div>
-            <div class="text-gray-400">Promedio x día</div>
+            <div class="text-gray-400">Promedio mensajes x día</div>
         </div>
         <div class="bg-gray-800 p-6 rounded shadow col-span-2">
             <div id="statRango" class="text-xl font-semibold">-</div>
             <div class="text-gray-400">Desde / Hasta</div>
         </div>
     </div>
+
+    <!-- Actividad especial -->
+    <section class="w-full max-w-4xl bg-gray-800 p-6 rounded shadow mb-8">
+        <h3 class="text-2xl font-semibold mb-4 text-center text-yellow-400">🎉 Actividad especial</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center">
+            <div>
+                <div id="statVacaciones" class="text-3xl font-bold">-</div>
+                <div class="text-gray-400">Mensajes en vacaciones (enero / julio)</div>
+            </div>
+            <div>
+                <div id="statFindes" class="text-3xl font-bold">-</div>
+                <div class="text-gray-400">Mensajes en fines de semana</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tiempo promedio de respuesta -->
+    <section class="w-full max-w-4xl bg-gray-800 p-6 rounded shadow mb-8">
+        <h3 class="text-2xl font-semibold mb-4 text-center text-blue-400">⏱️ Promedio de respuesta</h3>
+        <p class="text-center text-4xl font-bold" id="statPromedioRespuesta">-</p>
+        <p class="text-center text-gray-400 mt-2">Tiempo promedio entre mensajes (en segundos)</p>
+    </section>
+
+    <!-- Miembros activos -->
+    <section class="w-full max-w-4xl bg-gray-800 p-6 rounded shadow">
+        <h3 class="text-2xl font-semibold mb-4 text-center text-green-400">🧍‍♂️ Miembros activos (último mes)</h3>
+        <ul id="listaActivos" class="text-white space-y-2 text-center">
+            <li class="text-gray-400">Cargando...</li>
+        </ul>
+    </section>
+
 
 </main>
 <script src="scirpt-estadis.js"></script>
