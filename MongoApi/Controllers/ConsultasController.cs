@@ -140,6 +140,21 @@ namespace MongoApi.Controllers
         }
 
 
+        [HttpGet("mensajesPorDia")]
+        public async Task<IActionResult> GetMensajesPorDia([FromQuery] string rango)
+        {
+            DateTime? desde = rango switch
+            {
+                "semana" => DateTime.Today.AddDays(-6),
+                "mes" => DateTime.Today.AddDays(-29),
+                "todo" or _ => DateTime.Today.AddDays(-365),
+            };
+
+            var datos = await _servicio.GetMensajesPorDiaAsync(desde);
+            return Ok(datos);
+        }
+
+
 
     }
 }

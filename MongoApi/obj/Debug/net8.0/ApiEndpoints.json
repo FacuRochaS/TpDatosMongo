@@ -109,6 +109,22 @@
   },
   {
     "ContainingType": "MongoApi.Controllers.ConsultasController",
+    "Method": "GetMensajesPorDia",
+    "RelativePath": "api/Consultas/mensajesPorDia",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rango",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MongoApi.Controllers.ConsultasController",
     "Method": "GetMiembrosActivos",
     "RelativePath": "api/Consultas/miembros-activos",
     "HttpMethod": "GET",

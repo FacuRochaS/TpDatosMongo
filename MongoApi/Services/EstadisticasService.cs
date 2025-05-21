@@ -12,7 +12,7 @@ namespace MongoApi.Services
 
         public EstadisticasService(IConfiguration config)
         {
-            var client = new MongoClient(config["MongoDB:ConnectionString"]); // Link coneccion
+            var client = new MongoClient(config["MongoDB:ConnectionString"]); 
             var database = client.GetDatabase(config["MongoDB:DatabaseName"]); //Nombre BD
             //_mensajes = database.GetCollection<Mensaje>("fashionWorld");
             _mensajes = database.GetCollection<Mensaje>("grupoWpp"); //Este es el nombre de la coleccion
@@ -444,6 +444,41 @@ namespace MongoApi.Services
 
 
 
+        public async Task<List<DiaActividadDTO>> GetMensajesPorDiaAsync(DateTime? desde = null)
+        {
+            var pipeline = new List<BsonDocument>
+    {
+        new BsonDocument("$addFields", new BsonDocument("datetime",
+            new BsonDocument("$dateFromString", new BsonDocument
+            {
+                { "dateString", new BsonDocument("$concat", new BsonArray { "$fecha", "T", "$hora", ":00" }) }
+            })))
+    };
+
+            if (desde.HasValue)
+            {
+                pipeline.Add(new BsonDocument("$match", new BsonDocument("datetime",
+                    new BsonDocument("$gte", desde.Value))));
+            }
+
+            pipeline.AddRange(new[]
+            {
+        new BsonDocument("$group", new BsonDocument
+        {
+            { "_id", "$fecha" },
+            { "cantidad", new BsonDocument("$sum", 1) }
+        }),
+        new BsonDocument("$sort", new BsonDocument("_id", 1))
+    });
+
+            var resultado = await _mensajes.Aggregate<BsonDocument>(pipeline).ToListAsync();
+
+            return resultado.Select(d => new DiaActividadDTO
+            {
+                Fecha = d["_id"].AsString,
+                Cantidad = d["cantidad"].ToInt32()
+            }).ToList();
+        }
 
 
 

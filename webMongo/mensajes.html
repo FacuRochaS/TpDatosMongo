@@ -25,28 +25,42 @@
 
 <main class="flex flex-col items-center px-4 py-10 gap-12">
 
-
-
-  <!-- Gráfico histórico -->
-  <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg">
-    <h2 class="text-2xl font-semibold mb-2 text-center">Mensajes por hora (histórico)</h2>
-    <p class="text-center text-gray-400 mb-6">Este gráfico muestra la distribución total de mensajes agrupados por hora, considerando todos los días.</p>
-
-    <div class="w-full">
-      <canvas id="consultaHistorica"></canvas>
-    </div>
+  <!-- 🔹 Última semana -->
+  <div class="w-full max-w-6xl bg-gray-800 p-6 rounded-lg shadow-lg mt-10">
+    <h2 class="text-2xl font-semibold text-center mb-2">📆 Mensajes por día - Última semana</h2>
+    <p class="text-center text-gray-400 mb-4">Flujo diario de mensajes en los últimos 7 días.</p>
+    <canvas id="graficoSemanaDia"></canvas>
   </div>
 
-  <!-- Comparativa semana vs finde -->
+  <!-- 🔸 Último mes -->
+  <div class="w-full max-w-6xl bg-gray-800 p-6 rounded-lg shadow-lg mt-10">
+    <h2 class="text-2xl font-semibold text-center mb-2">📆 Mensajes por día - Último mes</h2>
+    <p class="text-center text-gray-400 mb-4">Flujo diario de mensajes en los últimos 30 días.</p>
+    <canvas id="graficoMesDia"></canvas>
+  </div>
+
+  <!-- 🟢 Histórico -->
+  <div class="w-full max-w-6xl bg-gray-800 p-6 rounded-lg shadow-lg mt-10">
+    <h2 class="text-2xl font-semibold text-center mb-2">📆 Mensajes por día - Último Año</h2>
+    <p class="text-center text-gray-400 mb-4">Flujo diario total desde el primer día registrado.</p>
+    <canvas id="graficoHistoricoDia"></canvas>
+  </div>
+
+
+
   <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg mt-10">
-    <h2 class="text-2xl font-semibold mb-2 text-center">Comparativa de actividad</h2>
-    <p class="text-center text-gray-400 mb-6">Este gráfico compara la cantidad de mensajes por hora entre los días de semana y los fines de semana.</p>
+    <h2 class="text-2xl font-semibold mb-2 text-center">📊 Mensajes por hora</h2>
+    <p class="text-center text-gray-400 mb-4">Visualizá la distribución de mensajes por hora.</p>
 
-    <div class="w-full">
-      <canvas id="actividadSemanaFinde"></canvas>
+    <div class="flex justify-center mb-6">
+      <label class="text-white text-sm flex items-center gap-2">
+        <input type="checkbox" id="chkDetalle" class="mr-1">
+        Ver detalle (semana vs finde)
+      </label>
     </div>
-  </div>
 
+    <canvas id="graficoCombinado"></canvas>
+  </div>
 
 
   <!-- Gráfico comparativo -->

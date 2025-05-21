@@ -82,38 +82,77 @@ async function consultaComparativa() {
     });
 }
 
-async function consultaHistorica() {
-    const res = await fetch("https://localhost:7130/api/Consultas/MensajesHora");
-    const data = await res.json();
 
-    const labels = data.map(d => d.horaTexto);  // "00:00", ..., "23:00"
-    const valores = data.map(d => d.cantidad);
 
-    const ctx = document.getElementById("consultaHistorica").getContext("2d");
 
-    new Chart(ctx, {
+
+let chartCombinado;
+
+async function actualizarGraficoCombinado() {
+    const verDetalle = document.getElementById("chkDetalle").checked;
+
+    const [resHistorico, resSemanaFinde] = await Promise.all([
+        fetch("https://localhost:7130/api/Consultas/MensajesHora").then(r => r.json()),
+        fetch("https://localhost:7130/api/Consultas/consulta4").then(r => r.json())
+    ]);
+
+    const labels = Array.from({ length: 24 }, (_, h) => `${h.toString().padStart(2, "0")}:00`);
+    const datasets = [];
+
+    if (verDetalle) {
+        const valoresSemana = resSemanaFinde.map(d => d.cantidadSemana);
+        const valoresFinde = resSemanaFinde.map(d => d.cantidadFinde);
+
+        datasets.push(
+            {
+                label: "Días de semana",
+                data: valoresSemana,
+                backgroundColor: "rgba(59,130,246,0.6)",
+                borderColor: "rgba(59,130,246,1)",
+                borderWidth: 1,
+                stack: "actividad"
+            },
+            {
+                label: "Fines de semana",
+                data: valoresFinde,
+                backgroundColor: "rgba(234,88,12,0.6)",
+                borderColor: "rgba(234,88,12,1)",
+                borderWidth: 1,
+                stack: "actividad"
+            }
+        );
+    } else {
+        const valoresHistorico = resHistorico.map(d => d.cantidad);
+
+        datasets.push({
+            label: "Histórico total",
+            data: valoresHistorico,
+            backgroundColor: "rgba(34,197,94,0.6)",
+            borderColor: "rgba(34,197,94,1)",
+            borderWidth: 1
+        });
+    }
+
+    const ctx = document.getElementById("graficoCombinado").getContext("2d");
+    if (chartCombinado) chartCombinado.destroy();
+
+    chartCombinado = new Chart(ctx, {
         type: "bar",
         data: {
             labels,
-            datasets: [{
-                label: "Cantidad total de mensajes por hora",
-                data: valores,
-                backgroundColor: "rgba(34,197,94,0.6)",
-                borderColor: "rgba(34,197,94,1)",
-                borderWidth: 1
-            }]
+            datasets
         },
         options: {
             responsive: true,
             scales: {
                 x: {
+                    stacked: verDetalle,
                     ticks: { color: "white" },
                     grid: { color: "#2d3748" }
                 },
                 y: {
                     beginAtZero: true,
-                    min: 0,
-                   // max: 30,
+                    stacked: verDetalle,
                     ticks: { color: "white" },
                     grid: { color: "#2d3748" }
                 }
@@ -126,64 +165,89 @@ async function consultaHistorica() {
 }
 
 
-async function consultaSemanaFinde() {
-    const res = await fetch("https://localhost:7130/api/Consultas/consulta4");
-    const data = await res.json();
 
-    const labels = data.map(d => d.horaTexto);
-    const valoresSemana = data.map(d => d.cantidadSemana);
-    const valoresFinde = data.map(d => d.cantidadFinde);
+let graficoSemanaDia = null;
+let graficoMesDia = null;
+let graficoHistoricoDia = null;
 
-    const ctx = document.getElementById("actividadSemanaFinde").getContext("2d");
+async function crearGraficoPorDia(canvasId, datos, label, colores, graficoVariable) {
+    const ctx = document.getElementById(canvasId).getContext("2d");
 
-    new Chart(ctx, {
-        type: "bar",
+    if (graficoVariable && typeof graficoVariable.destroy === "function") {
+        graficoVariable.destroy();
+    }
+
+    const nuevoGrafico = new Chart(ctx, {
+        type: "line",
         data: {
-            labels,
-            datasets: [
-                {
-                    label: "Días de semana",
-                    data: valoresSemana,
-                    backgroundColor: "rgba(59,130,246,0.6)", // azul
-                    borderColor: "rgba(59,130,246,1)",
-                    borderWidth: 1
-                },
-                {
-                    label: "Fines de semana",
-                    data: valoresFinde,
-                    backgroundColor: "rgba(234,88,12,0.6)", // naranja
-                    borderColor: "rgba(234,88,12,1)",
-                    borderWidth: 1
-                }
-            ]
+            labels: datos.map(d => d.fecha),
+            datasets: [{
+                label,
+                data: datos.map(d => d.cantidad),
+                borderColor: colores[0],
+                backgroundColor: colores[1],
+                tension: 0.3,
+                fill: true
+            }]
         },
         options: {
             responsive: true,
             scales: {
                 x: {
-                    ticks: { color: "white" },
+                    ticks: { color: "white", maxRotation: 90, minRotation: 45 },
                     grid: { color: "#2d3748" }
                 },
                 y: {
                     beginAtZero: true,
-                    min: 0,
                     ticks: { color: "white" },
                     grid: { color: "#2d3748" }
                 }
             },
             plugins: {
-                legend: {
-                    labels: { color: "white" }
-                }
+                legend: { labels: { color: "white" } }
             }
         }
     });
+
+    return nuevoGrafico;
+}
+
+async function cargarGraficosPorDia() {
+    const colores = {
+        semana: ["rgba(59,130,246,1)", "rgba(59,130,246,0.3)"],       // azul
+        mes: ["rgba(234,88,12,1)", "rgba(234,88,12,0.3)"],            // naranja
+        todo: ["rgba(34,197,94,1)", "rgba(34,197,94,0.3)"]            // verde
+    };
+
+    const [semana, mes, todo] = await Promise.all([
+        fetch("https://localhost:7130/api/Consultas/mensajesPorDia?rango=semana").then(r => r.json()),
+        fetch("https://localhost:7130/api/Consultas/mensajesPorDia?rango=mes").then(r => r.json()),
+        fetch("https://localhost:7130/api/Consultas/mensajesPorDia?rango=todo").then(r => r.json())
+    ]);
+
+    graficoSemanaDia = await crearGraficoPorDia("graficoSemanaDia", semana, "Última semana", colores.semana, graficoSemanaDia);
+    graficoMesDia = await crearGraficoPorDia("graficoMesDia", mes, "Último mes", colores.mes, graficoMesDia);
+    graficoHistoricoDia = await crearGraficoPorDia("graficoHistoricoDia", todo, "Histórico", colores.todo, graficoHistoricoDia);
 }
 
 
-// Llamar al cargar
+
+
+
+
+
+
+
+
+
+
+// ⏯ Eventos
+document.getElementById("chkDetalle").addEventListener("change", actualizarGraficoCombinado);
+
+
 window.addEventListener("DOMContentLoaded", () => {
-    consultaHistorica();
-    consultaSemanaFinde(); // 👈 nuevo
+    actualizarGraficoCombinado();
+    cargarGraficosPorDia();
 });
+
 

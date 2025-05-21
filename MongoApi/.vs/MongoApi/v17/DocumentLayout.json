@@ -11,12 +11,16 @@
       "RelativeMoniker": "D:0:0:{DB599496-4D45-4247-951B-BFB271D3AEB5}|MongoApi.csproj|solutionrelative:services\\estadisticasservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DB599496-4D45-4247-951B-BFB271D3AEB5}|MongoApi.csproj|c:\\users\\facur\\onedrive\\escritorio\\tpdatosmongo\\mongoapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB599496-4D45-4247-951B-BFB271D3AEB5}|MongoApi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{DB599496-4D45-4247-951B-BFB271D3AEB5}|MongoApi.csproj|c:\\users\\facur\\onedrive\\escritorio\\tpdatosmongo\\mongoapi\\models\\horarioactividaddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DB599496-4D45-4247-951B-BFB271D3AEB5}|MongoApi.csproj|solutionrelative:models\\horarioactividaddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB599496-4D45-4247-951B-BFB271D3AEB5}|MongoApi.csproj|c:\\users\\facur\\onedrive\\escritorio\\tpdatosmongo\\mongoapi\\models\\diaactividaddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DB599496-4D45-4247-951B-BFB271D3AEB5}|MongoApi.csproj|solutionrelative:models\\diaactividaddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB599496-4D45-4247-951B-BFB271D3AEB5}|MongoApi.csproj|c:\\users\\facur\\onedrive\\escritorio\\tpdatosmongo\\mongoapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DB599496-4D45-4247-951B-BFB271D3AEB5}|MongoApi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DB599496-4D45-4247-951B-BFB271D3AEB5}|MongoApi.csproj|c:\\users\\facur\\onedrive\\escritorio\\tpdatosmongo\\mongoapi\\models\\autorestadisticasdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -62,19 +66,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AutorEstadisticasDTO.cs",
-              "DocumentMoniker": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Models\\AutorEstadisticasDTO.cs",
-              "RelativeDocumentMoniker": "Models\\AutorEstadisticasDTO.cs",
-              "ToolTip": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Models\\AutorEstadisticasDTO.cs",
-              "RelativeToolTip": "Models\\AutorEstadisticasDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-20T20:39:49.375Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "HorarioActividadDto.cs",
               "DocumentMoniker": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Models\\HorarioActividadDto.cs",
               "RelativeDocumentMoniker": "Models\\HorarioActividadDto.cs",
@@ -82,11 +74,51 @@
               "RelativeToolTip": "Models\\HorarioActividadDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-20T20:35:34.261Z"
+              "WhenOpened": "2025-05-20T20:35:34.261Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "ConsultasController.cs",
+              "DocumentMoniker": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Controllers\\ConsultasController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ConsultasController.cs",
+              "ToolTip": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Controllers\\ConsultasController.cs",
+              "RelativeToolTip": "Controllers\\ConsultasController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJ0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-18T15:28:55.105Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "EstadisticasService.cs",
+              "DocumentMoniker": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Services\\EstadisticasService.cs",
+              "RelativeDocumentMoniker": "Services\\EstadisticasService.cs",
+              "ToolTip": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Services\\EstadisticasService.cs",
+              "RelativeToolTip": "Services\\EstadisticasService.cs",
+              "ViewState": "AgIAANQBAAAAAAAAAAAswOEBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-18T15:28:59.153Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DiaActividadDTO.cs",
+              "DocumentMoniker": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Models\\DiaActividadDTO.cs",
+              "RelativeDocumentMoniker": "Models\\DiaActividadDTO.cs",
+              "ToolTip": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Models\\DiaActividadDTO.cs",
+              "RelativeToolTip": "Models\\DiaActividadDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-21T13:18:26.042Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -98,20 +130,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "EstadisticasService.cs",
-              "DocumentMoniker": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Services\\EstadisticasService.cs",
-              "RelativeDocumentMoniker": "Services\\EstadisticasService.cs",
-              "ToolTip": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Services\\EstadisticasService.cs",
-              "RelativeToolTip": "Services\\EstadisticasService.cs",
-              "ViewState": "AgIAAKwAAAAAAAAAAAAowMAAAAAJAAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "AutorEstadisticasDTO.cs",
+              "DocumentMoniker": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Models\\AutorEstadisticasDTO.cs",
+              "RelativeDocumentMoniker": "Models\\AutorEstadisticasDTO.cs",
+              "ToolTip": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Models\\AutorEstadisticasDTO.cs",
+              "RelativeToolTip": "Models\\AutorEstadisticasDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-18T15:28:59.153Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-20T20:39:49.375Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "Mensaje.cs",
               "DocumentMoniker": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Models\\Mensaje.cs",
               "RelativeDocumentMoniker": "Models\\Mensaje.cs",
@@ -120,19 +151,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-18T15:28:57.557Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ConsultasController.cs",
-              "DocumentMoniker": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Controllers\\ConsultasController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ConsultasController.cs",
-              "ToolTip": "C:\\Users\\facur\\OneDrive\\Escritorio\\TpDatosMongo\\MongoApi\\Controllers\\ConsultasController.cs",
-              "RelativeToolTip": "Controllers\\ConsultasController.cs",
-              "ViewState": "AgIAADoAAAAAAAAAAAAIwEwAAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-18T15:28:55.105Z",
-              "EditorCaption": ""
             }
           ]
         }
