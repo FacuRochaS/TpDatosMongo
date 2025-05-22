@@ -48,19 +48,25 @@
 
 
 
+  <!-- Contenedor del gráfico -->
   <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg mt-10">
-    <h2 class="text-2xl font-semibold mb-2 text-center">📊 Mensajes por hora</h2>
-    <p class="text-center text-gray-400 mb-4">Visualizá la distribución de mensajes por hora.</p>
+    <h2 class="text-2xl font-semibold mb-2 text-center">📊 Comparativa por hora</h2>
+    <p class="text-center text-gray-400 mb-4 text-sm">Seleccioná qué datos visualizar</p>
 
-    <div class="flex justify-center mb-6">
-      <label class="text-white text-sm flex items-center gap-2">
-        <input type="checkbox" id="chkDetalle" class="mr-1">
-        Ver detalle (semana vs finde)
-      </label>
+    <!-- Checkbox principal -->
+    <div class="flex justify-center gap-4 mb-4">
+      <label><input type="checkbox" id="chkDetalle" class="mr-2"> Ver detalle</label>
+    </div>
+
+    <!-- Checkboxes adicionales (semana y finde) -->
+    <div id="checkboxDetalle" class="flex justify-center gap-6 mb-6 transition-all duration-500 overflow-hidden max-h-0 opacity-0">
+      <label><input type="checkbox" id="chkSemana" class="mr-2" checked> Semana</label>
+      <label><input type="checkbox" id="chkFinde" class="mr-2" checked> Finde</label>
     </div>
 
     <canvas id="graficoCombinado"></canvas>
   </div>
+
 
 
   <!-- Gráfico comparativo -->

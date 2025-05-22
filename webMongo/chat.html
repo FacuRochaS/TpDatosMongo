@@ -23,12 +23,13 @@
 </header>
 
 <!-- Contenido de chat -->
-<main class="flex flex-col items-center px-4 py-10">
+<main class="flex flex-col items-center px-4 py-10 space-y-10">
+
     <h2 class="text-3xl font-semibold mb-4">Estadísticas generales</h2>
 
 
     <!-- Estadísticas generales -->
-    <div class="w-full max-w-4xl grid grid-cols-2 md:grid-cols-3 gap-4 text-center mb-12">
+    <div class="w-full max-w-4xl grid grid-cols-2 md:grid-cols-3 gap-4 text-center ">
         <div class="bg-gray-800 p-6 rounded shadow">
             <div id="statTotal" class="text-3xl font-bold">-</div>
             <div class="text-gray-400">Mensajes</div>
@@ -51,8 +52,16 @@
         </div>
     </div>
 
+    <!-- Tipos de mensajes -->
+    <div class="w-full max-w-3xl bg-gray-800 p-6 rounded-lg shadow-lg mt-10">
+        <h2 class="text-2xl font-semibold text-center mb-2">📂 Tipos de mensajes</h2>
+        <p class="text-center text-gray-400 mb-6">Distribución de mensajes multimedia, eliminados y de texto.</p>
+        <canvas id="graficoTiposMensajes"></canvas>
+    </div>
+
+
     <!-- Actividad especial -->
-    <section class="w-full max-w-4xl bg-gray-800 p-6 rounded shadow mb-8">
+    <section class="w-full max-w-4xl bg-gray-800 p-6 rounded shadow ">
         <h3 class="text-2xl font-semibold mb-4 text-center text-yellow-400">🎉 Actividad especial</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center">
             <div>
@@ -67,7 +76,7 @@
     </section>
 
     <!-- Tiempo promedio de respuesta -->
-    <section class="w-full max-w-4xl bg-gray-800 p-6 rounded shadow mb-8">
+    <section class="w-full max-w-4xl bg-gray-800 p-6 rounded shadow ">
         <h3 class="text-2xl font-semibold mb-4 text-center text-blue-400">⏱️ Promedio de respuesta</h3>
         <p class="text-center text-4xl font-bold" id="statPromedioRespuesta">-</p>
         <p class="text-center text-gray-400 mt-2">Tiempo promedio entre mensajes (en segundos)</p>
@@ -83,6 +92,7 @@
 
 
 </main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="scirpt-estadis.js"></script>
 
 </body>

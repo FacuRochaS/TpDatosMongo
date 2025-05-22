@@ -14,15 +14,11 @@ namespace MongoApi.Services
         {
             var client = new MongoClient(config["MongoDB:ConnectionString"]); 
             var database = client.GetDatabase(config["MongoDB:DatabaseName"]); //Nombre BD
-            //_mensajes = database.GetCollection<Mensaje>("fashionWorld");
+           // _mensajes = database.GetCollection<Mensaje>("fashionWorld");
             _mensajes = database.GetCollection<Mensaje>("grupoWpp"); //Este es el nombre de la coleccion
         }
 
-        public async Task<List<Mensaje>> ConsultaLibre(string filtroJson)
-        {
-            var filtroBson = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(filtroJson);
-            return await _mensajes.Find(filtroBson).Limit(100).ToListAsync();
-        }
+
 
         //facuu------------------------------------------------------------------------------------------
         private static string ObtenerHoraTexto(int hora)
@@ -483,6 +479,39 @@ namespace MongoApi.Services
 
 
 
+        public async Task<List<TipoMensajeDTO>> ObtenerTiposDeMensajes()
+        {
+            var pipeline = new BsonDocument[]
+            {
+        new BsonDocument("$project", new BsonDocument("tipo", new BsonDocument("$switch", new BsonDocument
+        {
+            { "branches", new BsonArray {
+                new BsonDocument {
+                    { "case", new BsonDocument("$eq", new BsonArray { "$mensaje", "<Multimedia omitido>" }) },
+                    { "then", "Multimedia" }
+                },
+                new BsonDocument {
+                    { "case", new BsonDocument("$eq", new BsonArray { "$mensaje", "Se eliminó este mensaje." }) },
+                    { "then", "Eliminado" }
+                }
+            }},
+            { "default", "Texto" }
+        }))),
+        new BsonDocument("$group", new BsonDocument
+        {
+            { "_id", "$tipo" },
+            { "cantidad", new BsonDocument("$sum", 1) }
+        })
+            };
+
+            var result = await _mensajes.Aggregate<BsonDocument>(pipeline).ToListAsync();
+
+            return result.Select(d => new TipoMensajeDTO
+            {
+                Tipo = d["_id"].AsString,
+                Cantidad = d["cantidad"].ToInt32()
+            }).ToList();
+        }
 
 
 

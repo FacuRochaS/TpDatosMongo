@@ -73,8 +73,47 @@ function formatearFecha(fechaISO) {
     return fecha.toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "numeric" });
 }
 
+
+async function cargarGraficoTiposMensajes() {
+    const res = await fetch("https://localhost:7130/api/Consultas/tiposMensajes");
+    const data = await res.json();
+
+    const labels = data.map(d => d.tipo);
+    const valores = data.map(d => d.cantidad);
+
+    const ctx = document.getElementById("graficoTiposMensajes").getContext("2d");
+
+    new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels,
+            datasets: [{
+                data: valores,
+                backgroundColor: [
+                    "rgba(59, 130, 246, 0.7)", // Azul: multimedia
+                    "rgba(239, 68, 68, 0.7)",  // Rojo: eliminado
+                    "rgba(34, 197, 94, 0.7)"   // Verde: texto
+                ],
+                borderColor: "#1f2937",
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { labels: { color: "white" } }
+            }
+        }
+    });
+}
+
+
+
+
+
 window.addEventListener("DOMContentLoaded", () => {
     cargarEstadisticasGenerales();
+    cargarGraficoTiposMensajes();
     cargarActividadEspecial();
     cargarPromedioRespuesta();
     cargarMiembrosActivos();

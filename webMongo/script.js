@@ -86,85 +86,6 @@ async function consultaComparativa() {
 
 
 
-let chartCombinado;
-
-async function actualizarGraficoCombinado() {
-    const verDetalle = document.getElementById("chkDetalle").checked;
-
-    const [resHistorico, resSemanaFinde] = await Promise.all([
-        fetch("https://localhost:7130/api/Consultas/MensajesHora").then(r => r.json()),
-        fetch("https://localhost:7130/api/Consultas/consulta4").then(r => r.json())
-    ]);
-
-    const labels = Array.from({ length: 24 }, (_, h) => `${h.toString().padStart(2, "0")}:00`);
-    const datasets = [];
-
-    if (verDetalle) {
-        const valoresSemana = resSemanaFinde.map(d => d.cantidadSemana);
-        const valoresFinde = resSemanaFinde.map(d => d.cantidadFinde);
-
-        datasets.push(
-            {
-                label: "Días de semana",
-                data: valoresSemana,
-                backgroundColor: "rgba(59,130,246,0.6)",
-                borderColor: "rgba(59,130,246,1)",
-                borderWidth: 1,
-                stack: "actividad"
-            },
-            {
-                label: "Fines de semana",
-                data: valoresFinde,
-                backgroundColor: "rgba(234,88,12,0.6)",
-                borderColor: "rgba(234,88,12,1)",
-                borderWidth: 1,
-                stack: "actividad"
-            }
-        );
-    } else {
-        const valoresHistorico = resHistorico.map(d => d.cantidad);
-
-        datasets.push({
-            label: "Histórico total",
-            data: valoresHistorico,
-            backgroundColor: "rgba(34,197,94,0.6)",
-            borderColor: "rgba(34,197,94,1)",
-            borderWidth: 1
-        });
-    }
-
-    const ctx = document.getElementById("graficoCombinado").getContext("2d");
-    if (chartCombinado) chartCombinado.destroy();
-
-    chartCombinado = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels,
-            datasets
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    stacked: verDetalle,
-                    ticks: { color: "white" },
-                    grid: { color: "#2d3748" }
-                },
-                y: {
-                    beginAtZero: true,
-                    stacked: verDetalle,
-                    ticks: { color: "white" },
-                    grid: { color: "#2d3748" }
-                }
-            },
-            plugins: {
-                legend: { labels: { color: "white" } }
-            }
-        }
-    });
-}
-
-
 
 let graficoSemanaDia = null;
 let graficoMesDia = null;
@@ -232,6 +153,114 @@ async function cargarGraficosPorDia() {
 
 
 
+
+
+let chartCombinado;
+let maxY = 0;
+
+document.getElementById("chkDetalle").addEventListener("change", () => {
+    const mostrar = document.getElementById("chkDetalle").checked;
+    const detalleBox = document.getElementById("checkboxDetalle");
+
+    if (mostrar) {
+        detalleBox.classList.remove("max-h-0", "opacity-0");
+        detalleBox.classList.add("max-h-32", "opacity-100");
+    } else {
+        detalleBox.classList.add("max-h-0", "opacity-0");
+        detalleBox.classList.remove("max-h-32", "opacity-100");
+    }
+
+    actualizarGraficoCombinado();
+});
+
+document.getElementById("chkSemana").addEventListener("change", actualizarGraficoCombinado);
+document.getElementById("chkFinde").addEventListener("change", actualizarGraficoCombinado);
+
+async function actualizarGraficoCombinado() {
+    const verDetalle = document.getElementById("chkDetalle").checked;
+    const mostrarSemana = document.getElementById("chkSemana").checked;
+    const mostrarFinde = document.getElementById("chkFinde").checked;
+
+    const [resHistorico, resSemanaFinde] = await Promise.all([
+        fetch("https://localhost:7130/api/Consultas/MensajesHora").then(r => r.json()),
+        fetch("https://localhost:7130/api/Consultas/consulta4").then(r => r.json())
+    ]);
+
+    const labels = Array.from({ length: 24 }, (_, h) => `${h.toString().padStart(2, "0")}:00`);
+    const datasets = [];
+
+    // Recalcular maxY solo una vez
+    if (maxY === 0) {
+        maxY = Math.max(
+            ...resHistorico.map(d => d.cantidad),
+            ...resSemanaFinde.map(d => d.cantidadSemana),
+            ...resSemanaFinde.map(d => d.cantidadFinde)
+        );
+        maxY = Math.ceil(maxY * 1.2); // margen superior
+    }
+
+    if (verDetalle) {
+        if (mostrarSemana) {
+            datasets.push({
+                label: "Días de semana",
+                data: resSemanaFinde.map(d => d.cantidadSemana),
+                backgroundColor: "rgba(59,130,246,0.6)",
+                borderColor: "rgba(59,130,246,1)",
+                borderWidth: 1,
+                stack: "actividad"
+            });
+        }
+        if (mostrarFinde) {
+            datasets.push({
+                label: "Fines de semana",
+                data: resSemanaFinde.map(d => d.cantidadFinde),
+                backgroundColor: "rgba(234,88,12,0.6)",
+                borderColor: "rgba(234,88,12,1)",
+                borderWidth: 1,
+                stack: "actividad"
+            });
+        }
+    } else {
+        datasets.push({
+            label: "Histórico total",
+            data: resHistorico.map(d => d.cantidad),
+            backgroundColor: "rgba(34,197,94,0.6)",
+            borderColor: "rgba(34,197,94,1)",
+            borderWidth: 1
+        });
+    }
+
+    const ctx = document.getElementById("graficoCombinado").getContext("2d");
+    if (chartCombinado) chartCombinado.destroy();
+
+    chartCombinado = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels,
+            datasets
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    stacked: verDetalle,
+                    ticks: { color: "white" },
+                    grid: { color: "#2d3748" }
+                },
+                y: {
+                    beginAtZero: true,
+                    max: maxY,
+                    stacked: verDetalle,
+                    ticks: { color: "white" },
+                    grid: { color: "#2d3748" }
+                }
+            },
+            plugins: {
+                legend: { labels: { color: "white" } }
+            }
+        }
+    });
+}
 
 
 

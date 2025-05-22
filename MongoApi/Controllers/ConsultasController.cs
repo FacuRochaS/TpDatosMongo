@@ -16,22 +16,7 @@ namespace MongoApi.Controllers
             _servicio = servicio;
         }
 
-        [HttpGet("consulta")]
-        public async Task<IActionResult> ConsultaLibre([FromQuery] string filter)
-        {
-            if (string.IsNullOrEmpty(filter))
-                return BadRequest("Falta el filtro");
 
-            try
-            {
-                var datos = await _servicio.ConsultaLibre(filter);
-                return Ok(datos);
-            }
-            catch (Exception e)
-            {
-                return BadRequest("Error en filtro: " + e.Message);
-            }
-        }
 
         [HttpGet("consulta1")]
         public async Task<IActionResult> GetConsulta1([FromQuery] string fechaInicio)
@@ -154,6 +139,19 @@ namespace MongoApi.Controllers
             return Ok(datos);
         }
 
+        [HttpGet("tiposMensajes")]
+        public async Task<IActionResult> GetTiposMensajes()
+        {
+            try
+            {
+                var resultado = await _servicio.ObtenerTiposDeMensajes();
+                return Ok(resultado);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
 
     }
